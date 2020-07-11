@@ -1,26 +1,32 @@
-//Get stored location
-const storage = new Storage();
-const weatherLocation = storage.getLocationData();
+// Init Github
 
-const weather = new Weather(weatherLocation.city);
-const ui = new UI();
+const github = new Github;
+const newUI = new UI;
 
+//Search Input
+const searchUser= document.getElementById('searchUser');
 
-document.getElementById('DOMConentLoaded', getWeather());
-document.getElementById('w-change-btn').addEventListener('click',
-    (e) => {
-        const city = document.getElementById('city').value;
-        weather.changeLocation(city);
-        storage.setLocationData(city);
-        getWeather();
-        $('#locModal').modal('hide');
-    });
+// Search input event listener
 
-function getWeather() {
-    weather.getWeather()
-        .then(results => {
-        ui.paint(results);
+searchUser.addEventListener('keyup', (e) => {
+  // Get input text
+
+  const userText = e.target.value;
+
+  if(userText !== '') {
+    github.getUser(userText).then(data => {
+      if(data.profileData.message === 'Not Found') {
+        //Show alert
+        newUI.showAlert('User not found', 'alert alert-danger');
+      } else {
+        // Show profile
+        newUI.showProfile(data.profileData);
+        newUI.showRepos(data.repos);
+      }
     })
-        .catch(err => console.log(err));
+  } else {
+    // Clear profile
+    newUI.clearProfile();
+  }
 
-}
+});

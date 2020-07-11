@@ -1,16 +1,93 @@
 class UI {
-    constructor() {
-        this.weather = document.getElementById('w-weather');
-        this.minTemp = document.getElementById('w-minTemp');
-        this.maxTemp = document.getElementById('w-maxTemp');
-        this.humidity = document.getElementById('w-humidity');
-    }
+  constructor() {
+    this.profile = document.getElementById('profile');
+  }
+  
+  //Display Profile
 
-    paint(weather) {
+  showProfile(user) {
+    this.profile.innerHTML = `
+      <div class="card card-body mb-3">
+        <div class="row"> 
+          <div class="col-md-3">
+            <img class="img-fluid mb-2" src="${user.avatar_url}">
+            <a href="${user.html_url}" target="_blank" class="btn btn-primary btn-block mb-4">
+            ViewProfile</a>
+          </div>
+          <div class="col-md-9">
+            <span class="badge badge-primary">Public Repos: ${user.public_repos}</span>
+            <span class="badge badge-secondary">Public Repos: ${user.public_gists}</span>
+            <span class="badge badge-success">Public Repos: ${user.followers}</span>
+            <span class="badge badge-info">Public Repos: ${user.following}</span>
+            <br><br>
+            <ul class="list-group">
+              <li class="list-group-item">Company: ${user.company}</li>
+              <li class="list-group-item">Website/Blog: ${user.blog}</li>
+              <li class="list-group-item">Location: ${user.location}</li>
+              <li class="list-group-item">Member Since: ${user.created_at}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <h3 class="page-heading mb-3">Latest Repos</h3>
+      <div id="repos"></div>
+    `;
+  }
+  // Show user repos
+  showRepos(repos) {
+    let output = '';
 
-        this.weather.textContent = `${weather.sys.country}, ${weather.name}: ${weather.weather[0].description.toUpperCase()}`;
-        this.minTemp.textContent = weather.main.temp_min;
-        this.maxTemp.textContent = weather.main.temp_max;
-        this.humidity.textContent = weather.main.humidity;
+    repos.forEach(function(repo) {
+      console.log(repo);
+
+      output += `
+        <div class="card card-body mb-2">
+          <div class="row">
+            <div class="col-md-6">
+              <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+            </div>
+            <span class="badge badge-primary">Stars: ${repo.stargazers_count}</span>
+            <span class="badge badge-secondary">Watchers: ${repo.watchers}</span>
+            <span class="badge badge-success">Forks: ${repo.forks_count}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    // Output repo
+
+    document.getElementById('repos').innerHTML = output;
+  }
+
+  // Show alert message
+  showAlert(message, className) {
+    this.clearAlert();
+    const div = document.createElement('div');
+    // Add classes
+    div.className = className;
+    // Add text
+    div.appendChild(document.createTextNode(message));
+    // Get parent
+    const container = document.querySelector('.searchContainer');
+    // Get Search box
+    const search = document.querySelector('.search');
+    // Insert alert
+    container.insertBefore(div, search);
+
+    // Timeout after 3 seconds
+    setTimeout(() => this.clearAlert(), 3000);
+  }
+
+  // Clear Alert message
+  clearAlert() {
+    const currentAlert = document.querySelector('.alert');
+    if(currentAlert) {
+      currentAlert.remove();
     }
+  }
+
+  clearProfile() {
+    this.profile.innerHTML = '';
+  }
+
 }

@@ -1,3 +1,3 @@
-# WeatherAPI
-A simple fetch from API using HTML/CSS/JS
-openweathermap.org
+# github-userfinder
+
+List github users by search fetched from API
